@@ -1,0 +1,64 @@
+// This Google Script will send emails (e.g., reminder messages) based on dates in a Google Sheet. 
+//The information in the Google Sheet can also set up Google Calendar events on specific dates, as shown in 
+// this script: https://github.com/ryanrwatkins/Google-Sheet-to-Calendar.  
+// This also imports a list of email recipients from another tab in the Sheet using this Google Sheet notation: =textjoin(", ", 1, members!B2:B) 
+// to put them into a comma separated format.
+
+// This is based largely on: https://medium.com/@mccarthyd/trigger-email-reminders-based-on-dates-in-google-sheets-9aa2060d7aa2
+
+function email_alerts() {
+  
+// Get today's date so that we can add a day to get tomorrow's date. We will run the script each day using a Google Script trigger, so this gives us the date for comparison. 
+  var today = new Date();
+  var tomorrowDay = today.getDate() + 1;   // we want tomorrow since we want to send the reminder the day before
+  var todayMonth = today.getMonth() + 1;  //java starts dates with January being zero, so we add 1 to it so that it is 1
+  var todayYear = today.getFullYear();
+  
+ // getting data from our Google Sheet
+  var schedule_spreadsheet = SpreadsheetApp.openByUrl("https://docs.google.com/spreadsheets/d/XXXXXXXXXXXXXXXXXXXXXXXXXXX").getSheetByName("schedule");
+
+// Get the list of email addresses from the Google Sheet.
+var email_addresses = schedule_spreadsheet.getRange('G2').getValue();
+
+// Get the calendar information from the Google Sheet (start time/date, end time/date, title, etc.)
+ var scheduled_dates = schedule_spreadsheet.getRange(5, 1, 100, 5).getValues();    // getRange here uses (firstRow, firstColumn, numberOfRows, numberOfColumns) format
+
+  // Loop through all of the event dates and get them in the same format as above for comparison
+  for (var i = 0; i < scheduled_dates.length; ++i) {
+    var coders_date = scheduled_dates[i];
+
+    var coders_dateMonth = new Date(coders_date[0]).getMonth() + 1;
+    var coders_dateDay = new Date(coders_date[0]).getDate();
+    var coders_dateYear = new Date(coders_date[0]).getFullYear();
+
+    // Create variables with the information for the email message
+    var subject = 'Coders: Reminder of tomorrow\'s meet-up';
+    var message =
+      ' Tomorrow at 1:00pm ET, the Coders weekly meet-up will focus on ' + coders_date[2]  +
+      '.<p>' +
+'Please join us on Zoom.'  +
+       '<p>' +
+      ' See you there,' +
+       '<p>' +
+       'Ryan ';
+    
+    // Start if loop to check if tomorrow is a day with an event
+    if (
+
+    coders_dateMonth === todayMonth &&
+    coders_dateDay === tomorrowDay &&
+    coders_dateYear === todayYear
+    ) {
+// If tomorrow is an event then send an email
+
+     MailApp.sendEmail('INSERT A RECIPIENT EMAIL ADDRESS', subject, message,       //The email will be sent from your Gmail account used for the Google Sheet
+  {htmlBody: message,
+  bcc: email_addresses}   // Put the long list of email addresses as a BCC so that people only see their email address
+    );
+     Logger.log('success');  // Optional log if you want it.
+    }
+
+  }
+
+
+}
