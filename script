@@ -2,7 +2,8 @@
 //The information in the Google Sheet can also set up Google Calendar events on specific dates, as shown in 
 // this script: https://github.com/ryanrwatkins/Google-Sheet-to-Calendar.  
 // This also imports a list of email recipients from another tab in the Sheet using this Google Sheet notation: =textjoin(", ", 1, members!B2:B) 
-// to put them into a comma separated format.
+// to put them into a comma separated format. Check how many emails you  can send per day: https://developers.google.com/apps-script/guides/services/quotas 
+// There is a max of 50 recipients per email for everyone, so you  may have to break the emails into smaller groups.
 
 // This is based largely on: https://medium.com/@mccarthyd/trigger-email-reminders-based-on-dates-in-google-sheets-9aa2060d7aa2
 
