@@ -1,4 +1,4 @@
-# Google-Sheet-Event-Reminder-Emails
+# Google-Sheet-Event-Reminder-Emails  (Google Apps Script)
 Use Google Sheet to manage your Calendar events and sent email reminders
 
 This Google Script will send emails (e.g., reminder messages) based on dates in a Google Sheet. 
